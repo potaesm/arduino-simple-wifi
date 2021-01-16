@@ -13,13 +13,18 @@
 
 WiFiClient wifiClient;
 
-void __connectLoop(char *wifiSSID)
+bool isWiFiConnected()
+{
+    return WiFi.status() == WL_CONNECTED;
+}
+
+void __wifiConnectLoop(char *wifiSSID)
 {
     byte wifiConnectCount = 0;
 #if defined(DEVMODE)
     Serial.println("Connecting");
 #endif
-    while (WiFi.status() != WL_CONNECTED)
+    while (!isWiFiConnected())
     {
 #if defined(DEVMODE)
         Serial.print(".");
@@ -54,7 +59,7 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
     }
     if (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
-        __connectLoop(wifiSSID);
+        __wifiConnectLoop(wifiSSID);
     }
 }
 
@@ -94,6 +99,6 @@ void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost,
         WiFi.disconnect();
         delay(2500);
         WiFi.begin(wifiSSID, wifiPassword);
-        __connectLoop(wifiSSID);
+        __wifiConnectLoop(wifiSSID);
     }
 }
