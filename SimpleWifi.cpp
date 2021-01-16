@@ -9,7 +9,7 @@
 #error "No ESP8266 or ESP32 detected"
 #endif
 
-** #define DEVMODE 1 **
+// #define DEVMODE 1
 
 WiFiClient wifiClient;
 
@@ -44,17 +44,14 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
 #endif
 }
 
-void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort)
+void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
 {
     bool networkCheck = false;
     if (!wifiClient.connect(connectionTestHost, connectionTestPort))
     {
         return;
     }
-    String requestHeaders = String("GET ") + "/" + " HTTP/1.1\r\n" +
-                            "Host: " + connectionTestHost + "\r\n" +
-                            "Accept: " + "application/json" + "\r\n" +
-                            "Connection: close\r\n\r\n";
+    String requestHeaders = String("GET ") + connectionTestPath + " HTTP/1.1\r\n" + "Host: " + connectionTestHost + "\r\n\r\n";
     wifiClient.print(requestHeaders);
     unsigned long apiTimeout = millis();
     while (!wifiClient.available())
