@@ -1,7 +1,15 @@
 #include "Arduino.h"
+#if defined(ESP8266)
+#warning "Using ESP8266"
 #include "ESP8266WiFi.h"
+#elif defined(ESP32)
+#warning "Using ESP32"
+#include "WiFi.h"
+#else
+#error "No ESP8266 or ESP32 detected"
+#endif
 
-#define DEVMODE 1
+** #define DEVMODE 1 **
 
 WiFiClient wifiClient;
 
