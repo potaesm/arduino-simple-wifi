@@ -9,16 +9,12 @@
 #error "No ESP8266 or ESP32 detected"
 #endif
 
-// #define DEVMODE 1
+#define DEVMODE 1
 
 WiFiClient wifiClient;
 
-void connectWifi(char *wifiSSID, char *wifiPassword)
+void __connectLoop(char *wifiSSID)
 {
-    WiFi.mode(WIFI_OFF);
-    delay(1000);
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(wifiSSID, wifiPassword);
     byte wifiConnectCount = 0;
 #if defined(DEVMODE)
     Serial.println("Connecting");
@@ -29,9 +25,9 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
         Serial.print(".");
 #endif
         delay(1000);
+        wifiConnectCount++;
         if (wifiConnectCount > 20)
         {
-            delay(5000);
             ESP.reset();
         }
     }
@@ -42,6 +38,24 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 #endif
+}
+
+void connectWifi(char *wifiSSID, char *wifiPassword)
+{
+    if (WiFi.SSID() != wifiSSID)
+    {
+        WiFi.mode(WIFI_OFF);
+        delay(1000);
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(wifiSSID, wifiPassword);
+        WiFi.persistent(true);
+        WiFi.setAutoConnect(true);
+        WiFi.setAutoReconnect(true);
+    }
+    if (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
+        __connectLoop(wifiSSID);
+    }
 }
 
 void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
@@ -80,17 +94,6 @@ void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost,
         WiFi.disconnect();
         delay(2500);
         WiFi.begin(wifiSSID, wifiPassword);
-        byte wifiConnectCount = 0;
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            delay(1000);
-            wifiConnectCount++;
-            // 20 second timeout
-            if (wifiConnectCount > 20)
-            {
-                delay(5000);
-                ESP.reset();
-            }
-        }
+        __connectLoop(wifiSSID);
     }
 }

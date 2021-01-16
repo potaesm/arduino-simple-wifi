@@ -3,6 +3,6 @@
 #include "Arduino.h"
 
 extern void connectWifi(char *wifiSSID, char *wifiPassword);
-extern void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost = "google.com", unsigned int connectionTestPort = 80, char *connectionTestPath = "/");
+extern void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost = "172.217.8.96", unsigned int connectionTestPort = 80, char *connectionTestPath = "/");
 
 #endif
