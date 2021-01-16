@@ -51,7 +51,7 @@ void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost,
     {
         return;
     }
-    String requestHeaders = String("GET ") + connectionTestPath + " HTTP/1.1\r\n" + "Host: " + connectionTestHost + "\r\n\r\n";
+    String requestHeaders = String("GET ") + connectionTestPath + " HTTP/1.1\r\n" + "Host: " + connectionTestHost + "\r\n" + "Connection: close\r\n\r\n";
     wifiClient.print(requestHeaders);
     unsigned long apiTimeout = millis();
     while (!wifiClient.available())
