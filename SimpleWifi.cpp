@@ -11,7 +11,12 @@
 
 #define DEVMODE 1
 
-WiFiClient wifiClient;
+WiFiClient wFClient;
+
+WiFiClient getWiFiClient()
+{
+    return wFClient;
+}
 
 bool isWiFiConnected()
 {
@@ -66,25 +71,25 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
 void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
 {
     bool networkCheck = false;
-    if (!wifiClient.connect(connectionTestHost, connectionTestPort))
+    if (!wFClient.connect(connectionTestHost, connectionTestPort))
     {
         return;
     }
     String requestHeaders = "GET " + String(connectionTestPath) + " HTTP/1.1\r\n" + "Host: " + String(connectionTestHost) + "\r\n" + "Connection: close\r\n\r\n";
-    wifiClient.print(requestHeaders);
+    wFClient.print(requestHeaders);
     unsigned long apiTimeout = millis();
-    while (!wifiClient.available())
+    while (!wFClient.available())
     {
         if (millis() - apiTimeout > 5000)
         {
-            wifiClient.stop();
+            wFClient.stop();
             return;
         }
     }
     String respondLine;
-    while (wifiClient.connected())
+    while (wFClient.connected())
     {
-        respondLine = wifiClient.readStringUntil('\n');
+        respondLine = wFClient.readStringUntil('\n');
         if (respondLine == "\r")
         {
             networkCheck = true;
