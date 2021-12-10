@@ -11,13 +11,6 @@
 
 #define DEVMODE 1
 
-WiFiClient wFClient;
-
-WiFiClient getWiFiClient()
-{
-    return wFClient;
-}
-
 bool isWiFiConnected()
 {
     return WiFi.status() == WL_CONNECTED;
@@ -68,28 +61,28 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
     }
 }
 
-void checkInternet(char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
+void checkInternet(WiFiClient wiFiClient, char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
 {
     bool networkCheck = false;
-    if (!wFClient.connect(connectionTestHost, connectionTestPort))
+    if (!wiFiClient.connect(connectionTestHost, connectionTestPort))
     {
         return;
     }
     String requestHeaders = "GET " + String(connectionTestPath) + " HTTP/1.1\r\n" + "Host: " + String(connectionTestHost) + "\r\n" + "Connection: close\r\n\r\n";
-    wFClient.print(requestHeaders);
+    wiFiClient.print(requestHeaders);
     unsigned long apiTimeout = millis();
-    while (!wFClient.available())
+    while (!wiFiClient.available())
     {
         if (millis() - apiTimeout > 5000)
         {
-            wFClient.stop();
+            wiFiClient.stop();
             return;
         }
     }
     String respondLine;
-    while (wFClient.connected())
+    while (wiFiClient.connected())
     {
-        respondLine = wFClient.readStringUntil('\n');
+        respondLine = wiFiClient.readStringUntil('\n');
         if (respondLine == "\r")
         {
             networkCheck = true;
