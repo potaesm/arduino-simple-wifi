@@ -8,6 +8,7 @@
 #endif
 
 extern void connectWifi(char *wifiSSID, char *wifiPassword);
+extern void disconnectWifi();
 extern bool isWiFiConnected();
 extern void checkInternet(WiFiClient wiFiClient, char *wifiSSID, char *wifiPassword, char *connectionTestHost = "172.217.8.96", unsigned int connectionTestPort = 80, char *connectionTestPath = "/");
 

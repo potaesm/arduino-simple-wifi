@@ -61,6 +61,11 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
     }
 }
 
+void disconnectWifi()
+{
+    WiFi.mode(WIFI_OFF);
+}
+
 void checkInternet(WiFiClient wiFiClient, char *wifiSSID, char *wifiPassword, char *connectionTestHost, unsigned int connectionTestPort, char *connectionTestPath)
 {
     bool networkCheck = false;
