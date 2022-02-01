@@ -50,6 +50,7 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
         WiFi.mode(WIFI_OFF);
         delay(1000);
         WiFi.mode(WIFI_STA);
+        WiFi.hostname("ESP-host");
         WiFi.begin(wifiSSID, wifiPassword);
         WiFi.persistent(true);
         WiFi.setAutoConnect(true);
@@ -101,6 +102,7 @@ void checkInternet(WiFiClient wiFiClient, char *wifiSSID, char *wifiPassword, ch
     {
         WiFi.disconnect();
         delay(2500);
+        WiFi.hostname("ESP-host");
         WiFi.begin(wifiSSID, wifiPassword);
         __wifiConnectLoop(wifiSSID);
     }
