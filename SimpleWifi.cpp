@@ -16,6 +16,12 @@ bool isWiFiConnected()
     return WiFi.status() == WL_CONNECTED;
 }
 
+void __setHostname()
+{
+    randomSeed(analogRead(0));
+    WiFi.hostname("ESP-Host-" + String(random(1024)));
+}
+
 void __wifiConnectLoop(char *wifiSSID)
 {
     byte wifiConnectCount = 0;
@@ -50,7 +56,7 @@ void connectWifi(char *wifiSSID, char *wifiPassword)
         WiFi.mode(WIFI_OFF);
         delay(1000);
         WiFi.mode(WIFI_STA);
-        WiFi.hostname("ESP-host");
+        __setHostname();
         WiFi.begin(wifiSSID, wifiPassword);
         WiFi.persistent(true);
         WiFi.setAutoConnect(true);
@@ -102,7 +108,7 @@ void checkInternet(WiFiClient wiFiClient, char *wifiSSID, char *wifiPassword, ch
     {
         WiFi.disconnect();
         delay(2500);
-        WiFi.hostname("ESP-host");
+        __setHostname();
         WiFi.begin(wifiSSID, wifiPassword);
         __wifiConnectLoop(wifiSSID);
     }
