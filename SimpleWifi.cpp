@@ -51,17 +51,15 @@ void __wifiConnectLoop(char *wifiSSID)
 
 void connectWifi(char *wifiSSID, char *wifiPassword)
 {
-    if (WiFi.SSID() != wifiSSID)
-    {
-        WiFi.mode(WIFI_OFF);
-        delay(1000);
-        WiFi.mode(WIFI_STA);
-        __setHostname();
-        WiFi.begin(wifiSSID, wifiPassword);
-        WiFi.persistent(true);
-        WiFi.setAutoConnect(true);
-        WiFi.setAutoReconnect(true);
-    }
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    delay(1000);
+    WiFi.mode(WIFI_STA);
+    __setHostname();
+    WiFi.begin(wifiSSID, wifiPassword);
+    WiFi.persistent(true);
+    WiFi.setAutoConnect(true);
+    WiFi.setAutoReconnect(true);
     if (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
         __wifiConnectLoop(wifiSSID);
